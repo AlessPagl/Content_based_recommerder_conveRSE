@@ -47,13 +47,15 @@ def get_recommendations_doc2vec(token_strings, documents, titles, IDs, modelDoC,
         modelDoC = load_model(documents, "Models/Doc2Vec/doc2vec_model", None)
     if most_similar:
         queries = list()
+        neg_queries = list()
         try:
             for string in token_strings:
-                new_sentence_vectorized = modelDoC.infer_vector(string, steps=100)
+                new_sentence_vectorized = modelDoC.infer_vector(string)
                 queries.append(new_sentence_vectorized)
         except Exception:
-            new_sentence_vectorized = modelDoC.infer_vector(token_strings, steps=100)
+            new_sentence_vectorized = modelDoC.infer_vector(token_strings)
             queries.append(new_sentence_vectorized)
+
         query = np.asarray(queries).mean(axis=0)
         similar_sentences = modelDoC.docvecs.most_similar([query], topn=num_recommends)
         rank = 1
